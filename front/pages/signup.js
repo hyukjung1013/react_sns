@@ -1,9 +1,8 @@
 import React from 'react';
-import Link from 'next/link';
 import Head from 'next/head'
 import AppLayout from '../components/AppLayout';
 
-const Home = () => {
+const Signup = () => {
     return (
         <>
             <Head>
@@ -12,9 +11,10 @@ const Home = () => {
             </Head>
             
             <AppLayout>
+                회원가입
             </AppLayout>
-        </>
+        </>   
     )
-}
+};
 
-export default Home;
+export default Signup;
