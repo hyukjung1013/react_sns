@@ -1,16 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Checkbox, Input, Button } from 'antd' 
 
-const Signup = () => {
+// Custom hook
+export const useInput = (initValue = null) => {
+    const [value, setter] = useState(initValue);
+    const handler = useCallback((e) => {
+        setter(e.target.value);
+    }, []);
+    return [value, handler];
+}
 
-    // Custom hook
-    const useInput = (initValue = null) => {
-        const [value, setter] = useState(initValue);
-        const handler = useCallback((e) => {
-            setter(e.target.value);
-        }, []);
-        return [value, handler];
-    }
+const Signup = () => {
 
     const [id, onChangeId] = useInput('');
     const [nickname, onChangeNickname] = useInput('');
