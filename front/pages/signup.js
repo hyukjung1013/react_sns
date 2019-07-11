@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Head from 'next/head'
 import AppLayout from '../components/AppLayout';
 import { Form, Checkbox, Input, Button } from 'antd' 
 
 const Signup = () => {
 
-    // const [id, setId] = useState('');
-    const [nickname, setNickname] = useState('');
-    const [password, setPassword] = useState('');
+    // Custom hook
+    const useInput = (initValue = null) => {
+        const [value, setter] = useState(initValue);
+        const handler = useCallback((e) => {
+            setter(e.target.value);
+        }, []);
+        return [value, handler];
+    }
+
+    const [id, onChangeId] = useInput('');
+    const [nickname, onChangeNickname] = useInput('');
+    const [password, onChangePassword] = useInput('');
+
     const [passwordCheck, setPasswordCheck] = useState('');
     const [term, setTerm] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [termError, setTermError] = useState(false);
 
-    const onSubmit = (e) => {
+    const onSubmit = useCallback((e) => {
         e.preventDefault();
         if (password !== passwordCheck) {
             return setPasswordError(true);
@@ -21,46 +31,18 @@ const Signup = () => {
         if (!term) {
             return setTermError(true);
         }
-        console.log({
-            id,
-            nickname,
-            password,
-            passwordCheck,
-            term,
-        });
-    };
+        console.log('Hello world!');
+    }, [password, passwordCheck, term]);
 
-    // const onChangeId = (e) => {
-    //     setId(e.target.value)
-    // };
-
-    const onChangeNick = (e) => {
-        setNickname(e.target.value)
-    };
-
-    const onChangePassword = (e) => {
-        setPassword(e.target.value)
-    };
-
-    const onChangePasswordCheck = (e) => {
+    const onChangePasswordCheck = useCallback((e) => {
         setPasswordError(e.target.value !== password);
         setPasswordCheck(e.target.value)
-    };
+    }, [password]);
 
-    const onChangeTerm = (e) => {
+    const onChangeTerm = useCallback((e) => {
         setTermError(false);
         setTerm(e.target.checked)
-    };
-
-    const useInput = (initValue = null) => {
-        const [value, setter] = useState(initValue);
-        const handler = (e) => {
-            setter(e.target.value);
-        }
-        return [value, handler];
-    }
-
-    const [id, onChangeId] = useInput('');
+    }, []);
 
     return (
         <>
@@ -79,7 +61,7 @@ const Signup = () => {
                         <div>
                         <label htmlFor="user-nickname">닉네임</label>
                         <br />
-                        <Input name="user-nickname" value={nickname} required onChange={onChangeNick} />
+                        <Input name="user-nickname" value={nickname} required onChange={onChangeNickname} />
                     </div>
                     <div>
                         <label htmlFor="user-password">비밀번호</label>
