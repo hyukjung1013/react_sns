@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
-import { useDispatch, useSelector } from 'react-redux'
-import { LOG_IN, LOG_OUT, loginAction } from '../reducers/user'
+import { connect } from 'react-redux'
+import { LOG_IN, LOG_OUT, loginAction, logoutAction } from '../reducers/user'
 
 const dummy = {
   isLoggedIn: true,
@@ -17,22 +17,12 @@ const dummy = {
   }],
 };
 
-const Home = () => {
-
-  const dispatch = useDispatch();
-  const { isLoggedIn, user } = useSelector(state => state.user);  // ./reducers/user.js
+const Home = ({ user, dispatch, login, logout }) => {
 
   useEffect(() => {
-    dispatch({
-      type: LOG_IN,
-      data: {
-        nickname: 'Zero Cho',
-      }
-    });
-    dispatch({
-      type: LOG_OUT,
-    });
-    dispatch(loginAction);
+    login();
+    logout();
+    login();
   }, [])
 
   return (
@@ -48,4 +38,17 @@ const Home = () => {
   );
 };
 
-export default Home;
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    login: () => dispatch(loginAction),
+    logout: () => dispatch(logoutAction),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
