@@ -2,14 +2,14 @@ export const initialState = {
     mainPosts: []
 };
 
-const ADD_POST = 'ADD_POST';
-const ADD_DUMMY = 'ADD_DUMMY';
+export const ADD_POST = 'ADD_POST';
+export const ADD_DUMMY = 'ADD_DUMMY';
 
-const addPost = {
+export const addPost = {
     type: ADD_POST,
 };
 
-const addDummy = {
+export const addDummy = {
     type: ADD_DUMMY,
     data: {
         content: 'Hello!',
