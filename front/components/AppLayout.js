@@ -2,8 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import LoginForm from './LoginForm'
 import UserProfile from './UserProfile'
-UserProfile
-import { Menu, Input, Button, Row, Col, Card, Avatar, Form } from 'antd' 
+
+import { Menu, Input, Button, Row, Col } from 'antd' 
 
 const dummy = {
     nickname: 'ronaldo',

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useInput } from '../pages/signup'
 import Link from 'next/link'
 import { Form, Input, Button } from 'antd';

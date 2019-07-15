@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Checkbox, Input, Button } from 'antd' 
 
-// Custom hook
 export const useInput = (initValue = null) => {
     const [value, setter] = useState(initValue);
     const handler = useCallback((e) => {
