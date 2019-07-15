@@ -2,18 +2,11 @@ import React from 'react'
 import Link from 'next/link'
 import LoginForm from './LoginForm'
 import UserProfile from './UserProfile'
-
+import { useSelector } from 'react-redux' 
 import { Menu, Input, Button, Row, Col } from 'antd' 
 
-const dummy = {
-    nickname: 'ronaldo',
-    Post: [],
-    Followings: [],
-    Followers: [],
-    isLoggedIn: false,
-}
-
 const AppLayout = ({ children }) => {
+    const { isLoggedIn } = useSelector( state => state.user );
     return (
         <div>
             <Menu mode="horizontal">
@@ -26,7 +19,7 @@ const AppLayout = ({ children }) => {
             <Link href="/signup"><a><Button>회원가입</Button></a></Link>
             <Row gutter={8}>
                 <Col xs={24} md={6}>
-                    {dummy.isLoggedIn ? <UserProfile /> : <LoginForm />}
+                    {isLoggedIn ? <UserProfile /> : <LoginForm />}
                 </Col>
                 <Col xs={24} md={12}>
                     {children}

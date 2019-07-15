@@ -1,6 +1,13 @@
+const dummyUser = {
+    nickname: 'ronaldo',
+    Post: [],
+    Followings: [],
+    Followers: [],
+}
+
 export const initalState = {
     isLoggedIn: false,
-    user: {},
+    user: null,
 }
 
 // Name of actions.
@@ -9,9 +16,6 @@ export const LOG_OUT = 'LOG_OUT'
 
 export const loginAction = {
     type: LOG_IN,
-    data: {
-        nickname: 'zerocho'
-    }
 };
 
 export const logoutAction = {
@@ -24,7 +28,7 @@ const reducer = (state = initalState, action) => {
             return {
                 ...state,
                 isLoggedIn: true,
-                user: action.data,
+                user: dummyUser,
             }
         }
         case LOG_OUT: {
