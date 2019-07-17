@@ -11,6 +11,12 @@ const Home = () => {
     dispatch({
       type: 'HELLO_SAGA'
     });
+    dispatch({
+      type: 'HELLO_SAGA'
+    });
+    dispatch({
+      type: 'HELLO_SAGA'
+    });
   }, [])
 
   // const { user, isLoggedIn } = useSelector(state => state.user);

@@ -5,10 +5,10 @@ const HELLO_SAGA = 'HELLO_SAGA'
 
 function* watchHello() {
     console.log('Before action');
-    yield take(HELLO_SAGA);
-    // dispatch 리스너
-    // 'HELLO_SAGA'라는 action이 dispatch되면 내부적으로 next()를 호출하여 중단점을 푼다.
-    console.log('After action');
+    while(true) {
+        yield take(HELLO_SAGA);
+        console.log('After action');
+    }
 } 
 
 export default function* userSaga() {
