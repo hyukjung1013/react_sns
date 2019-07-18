@@ -34,14 +34,17 @@ function signUpAPI() {
 
 function* signUp() {
     try {
-        yield call(signUpAPI); 
+        // yield call(signUpAPI);
+        yield delay(2000); 
+        throw new Error('ERROR당!!!!!!');
         yield put({
             type: SIGN_UP_SUCCESS
         });
     } catch(e) {
         console.error(e);
         yield put({
-            type: SIGN_UP_FAILURE
+            type: SIGN_UP_FAILURE,
+            error: e,
         });
     }
 }
