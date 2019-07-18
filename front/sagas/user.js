@@ -1,15 +1,16 @@
-import { all, put, takeEvery, call, fork } from 'redux-saga/effects'
-import { LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE } from '../reducers/user'
+import { all, put, takeEvery, call, fork, delay } from 'redux-saga/effects'
+import { LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from '../reducers/user'
+import axios from 'axios';
 
+// LOG IN
 function loginAPI() {
-    // 서버에 요청을 보내는 부분
+    return axios.post('/login');
 }
 
 function* login() {
     try {
-        yield call(loginAPI);       // call()은 동기호출, loginAPI가 다 실행되어야 아래가 실행된다.
-        // yield fork(loginAPI);    // fork()를 사용하면, 서버에서 응답이 오기도 전에 아래가 실행된다.
-
+        yield delay(2000);
+        // yield call(loginAPI); 
         yield put({
             type: LOG_IN_SUCCESS
         });
@@ -22,15 +23,36 @@ function* login() {
 }
 
 function* watchLogin() {
-    yield takeEvery(LOG_IN, login)
+    yield takeEvery(LOG_IN_REQUEST, login)
 } 
 
+
+// SIGN UP
+function signUpAPI() {
+    return axios.post('/signup');
+}
+
+function* signUp() {
+    try {
+        yield call(signUpAPI); 
+        yield put({
+            type: SIGN_UP_SUCCESS
+        });
+    } catch(e) {
+        console.error(e);
+        yield put({
+            type: SIGN_UP_FAILURE
+        });
+    }
+}
+
 function* watchSignUp() {
+    yield takeEvery(SIGN_UP_REQUEST, signUp)
 } 
 
 export default function* userSaga() {
     yield all([
-        fork(watchLogin),   // fork()는 비동기호출
-        fork(watchSignUp),  // watchLogin()과 watchSignUp()은 순서가 없기 때문.
+        fork(watchLogin),
+        fork(watchSignUp),
     ]) 
 }

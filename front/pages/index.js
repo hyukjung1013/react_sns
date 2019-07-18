@@ -12,7 +12,6 @@ const Home = () => {
 
   return (
     <div>
-      {user ? <div>로그인 했습니다.: {user.nickname}</div> : <div>로그아웃 했습니다.</div>}
       {isLoggedIn && <PostForm />}
       {mainPosts.map((c) => {
         return (
