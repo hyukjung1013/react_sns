@@ -28,15 +28,13 @@ function* watchLogin() {
 
 
 // SIGN UP
-function signUpAPI() {
-    return axios.post('/signup');
+function signUpAPI(signUpData) {
+    return axios.post('http://localhost:8080/api/user/', signUpData);
 }
 
-function* signUp() {
+function* signUp(action) {
     try {
-        // yield call(signUpAPI);
-        yield delay(2000); 
-        throw new Error('ERROR당!!!!!!');
+        yield call(signUpAPI, action.data)
         yield put({
             type: SIGN_UP_SUCCESS
         });
