@@ -6,7 +6,9 @@ axios.defaults.baseURL = 'http://localhost:8080/api';
 
 // LOG IN
 function loginAPI(loginData) {
-    return axios.post('/user/login', loginData);
+    return axios.post('/user/login', loginData, {
+        withCredentials: true,  // 백앤드와 쿠키를 주고받도록 설정 추가
+    });
 }
 
 function* login(action) {

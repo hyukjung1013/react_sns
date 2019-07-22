@@ -21,7 +21,10 @@ app.use('/', morgan('dev'));
 
 app.use('/', bodyParser.json());
 app.use('/', bodyParser.urlencoded({ extended: true }));
-app.use('/', cors());
+app.use('/', cors({
+    origin: true,
+    credentials: true,
+}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(expressSession({
     resave: false,
@@ -30,7 +33,8 @@ app.use(expressSession({
     cookie: {
         httpOnly: true,
         secure: false,  // https 
-    }
+    },
+    name: 'rnbc'    // connect.sid -> rnbcc
 }))
 app.use(passport.initialize());
 app.use(passport.session());
