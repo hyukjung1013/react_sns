@@ -1,5 +1,7 @@
 /back/node_modules/*
 /back/package-lock.json
+/back/.env
+/back/config/config.js
 /front/node_modules/*
 /front/package-lock.json
 /front/.next/*

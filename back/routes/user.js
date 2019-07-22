@@ -38,9 +38,30 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/logout', (req, res) => { 
+  req.logout();
+  req.session.destory();
+  res.send('logout 성공');
 });
 
-router.post('/login', (req, res) => { 
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      console.error(err);
+      next(err);
+    }
+    if (info) {
+      return res.status(401).send(info.reason);
+    }
+    return req.login(user, (loginErr) => {
+      if (loginErr) {
+        next(loginErr);
+      }
+      const filteredUser = Object.assign({}, user.toJSON());
+      delete filteredUser.password;
+
+      return res.json(filteredUser);
+    });
+  })(req, res, next);
 });
 
 router.get('/:id/follow', (req, res) => {
