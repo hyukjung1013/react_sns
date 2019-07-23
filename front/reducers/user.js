@@ -84,6 +84,13 @@ const dummyUser = {
       case LOG_OUT_REQUEST: {
         return {
           ...state,
+          isLoggingOut: true,
+        };
+      }
+      case LOG_OUT_SUCCESS: {
+        return {
+          ...state,
+          isLoggingOut: false,
           isLoggedIn: false,
           me: null,
         };
@@ -108,6 +115,23 @@ const dummyUser = {
           ...state,
           isSigningUp: false,
           signUpErrorReason: action.error,
+        };
+      }
+      case LOAD_USER_REQUEST: {
+        return {
+          ...state,
+        };
+      }
+      case LOAD_USER_SUCCESS: {
+        return {
+          ...state,
+          me: action.data,
+          isLoggedIn: true,
+        };
+      }
+      case LOAD_USER_FAILURE: {
+        return {
+          ...state,
         };
       }
       default: {

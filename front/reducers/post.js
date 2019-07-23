@@ -98,7 +98,7 @@ export const initialState = {
         return {
           ...state,
           isAddingPost: false,
-          mainPosts: [dummyPost, ...state.mainPosts],
+          mainPosts: [action.data, ...state.mainPosts],
           postAdded: true,
         };
       }
@@ -135,6 +135,23 @@ export const initialState = {
           ...state,
           isAddingComment: false,
           addCommentErrorReason: action.error,
+        };
+      }
+      case LOAD_MAIN_POSTS_REQUEST: {
+        return {
+          ...state,
+          mainPosts: [],
+        };
+      }
+      case LOAD_MAIN_POSTS_SUCCESS: {
+        return {
+          ...state,
+          mainPosts: action.data,
+        };
+      }
+      case LOAD_MAIN_POSTS_FAILURE: {
+        return {
+          ...state,
         };
       }
       default: {

@@ -9,7 +9,6 @@ module.exports = () => {
         passwordField: 'password',
     }, async (id, password, done) => {
         try {
-            console.log('으악악: ', id);
             const user = await db.User.findOne({ where: { userId: id } });
             if(!user) {
                 return done(null, false, { reason: '존재하지 않는 사용자입니다!' });
