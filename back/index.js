@@ -7,6 +7,7 @@ const db = require('./models');
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
 const postsAPIRouter = require('./routes/posts');
+const hashtagAPIRouter = require('./routes/hashtag');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const passport = require('passport');
@@ -42,6 +43,7 @@ app.use(passport.session());
 app.use('/api/user', userAPIRouter);
 app.use('/api/post', postAPIRouter);
 app.use('/api/posts', postsAPIRouter);
+app.use('/api/hashtag', hashtagAPIRouter);
 
 app.listen(8080, () => {
     console.log('Server is running on localhost:8080');

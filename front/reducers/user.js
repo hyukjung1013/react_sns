@@ -123,10 +123,16 @@ const dummyUser = {
         };
       }
       case LOAD_USER_SUCCESS: {
+        if (action.me) {
+          return {
+            ...state,
+            me: action.data,
+            isLoggedIn: true,
+          };
+        }
         return {
           ...state,
-          me: action.data,
-          isLoggedIn: true,
+          userInfo: action.data,
         };
       }
       case LOAD_USER_FAILURE: {
