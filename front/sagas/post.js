@@ -5,6 +5,7 @@ import {
   LOAD_MAIN_POSTS_REQUEST, LOAD_MAIN_POSTS_SUCCESS, LOAD_MAIN_POSTS_FAILURE,
   LOAD_HASHTAG_POSTS_REQUEST, LOAD_HASHTAG_POSTS_SUCCESS, LOAD_HASHTAG_POSTS_FAILURE,
   LOAD_USER_POSTS_REQUEST, LOAD_USER_POSTS_SUCCESS, LOAD_USER_POSTS_FAILURE,
+  LOAD_COMMENTS_REQUEST, LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE
 } from '../reducers/post';
 import axios from 'axios'
 
@@ -58,18 +59,21 @@ function* watchLoadMainPosts() {
   yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
 
-// ADD COMMNET
-function addCommentAPI() {
-
+// ADD COMMENT
+function addCommentAPI(data) {
+  return axios.post(`/post/${data.postId}/comment`, { content: data.content }, {
+    withCredentials: true
+  });
 }
 
 function* addComment(action) {
   try {
-    yield delay(2000);
+    const result = yield call(addCommentAPI, action.data);
     yield put({
       type: ADD_COMMENT_SUCCESS,
       data: {
         postId: action.data.postId,
+        comment: result.data,
       },
     });
   } catch (e) {
@@ -78,6 +82,34 @@ function* addComment(action) {
       error: e,
     });
   }
+}
+
+// LOAD COMMENTS
+function loadCommentsAPI(postId) {
+  return axios.get(`/post/${postId}/comments`);
+}
+
+function* loadComments(action) {
+  try {
+    const result = yield call(loadCommentsAPI, action.data);
+    yield put({
+      type: LOAD_COMMENTS_SUCCESS,
+      data: {
+        postId: action.data,
+        comments: result.data,
+      },
+    });
+  } catch (e) {
+    console.error(e);
+    yield put({
+      type: LOAD_COMMENTS_FAILURE,
+      error: e,
+    });
+  }
+}
+
+function* watchLoadComments() {
+  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
 }
 
 // LOAD HASHTAG POSTS
@@ -128,17 +160,16 @@ function* watchLoadUserPosts() {
   yield takeLatest(LOAD_USER_POSTS_REQUEST, loadUserPosts);
 }
 
-
 function* watchAddComment() {
   yield takeLatest(ADD_COMMENT_REQUEST, addComment);
 }
-
 
 export default function* postSaga() {
   yield all([
     fork(watchAddPost),
     fork(watchLoadMainPosts),
     fork(watchAddComment),
+    fork(watchLoadComments),
     fork(watchLoadHashtagPosts),
     fork(watchLoadUserPosts),
   ]);
