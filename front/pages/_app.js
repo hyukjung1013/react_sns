@@ -9,7 +9,7 @@ import reducer from '../reducers';
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from '../sagas';
 
-const NodeBird = ({ Component, store }) => {
+const NodeBird = ({ Component, store, pageProps }) => {
   return (
     <Provider store={store}>
       <Head>
@@ -17,7 +17,7 @@ const NodeBird = ({ Component, store }) => {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.2/antd.css" />
       </Head>
       <AppLayout>
-        <Component />
+        <Component {...pageProps} />
       </AppLayout>
     </Provider>
   );
@@ -26,6 +26,18 @@ const NodeBird = ({ Component, store }) => {
 NodeBird.propTypes = {
   Component: PropTypes.elementType,
   store: PropTypes.object,
+  pageProps: PropTypes.object.isRequired,
+}
+
+NodeBird.getInitialProps = async (context) => {
+  const { ctx, Component } = context;
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    pageProps = await context.Component.getInitialProps(ctx);   
+    // Component는 <Component />를 의미한다.
+    // Hashtag.getInitialProps = async (ctx) => { .. } 가 호출된다.
+  }
+  return { pageProps };
 }
 
 export default withRedux((initialState, options) => {
