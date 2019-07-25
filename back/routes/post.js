@@ -1,9 +1,10 @@
 const express = require('express');
 const db = require('../models');
+const { isLoggedIn } = require('./middleware');
 
 const router = express.Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/', isLoggedIn, async (req, res, next) => {
     try {
         const hashtags = req.body.content.match(/#[^\s]+/g);
         const newPost = await db.Post.create({
@@ -56,7 +57,7 @@ router.get('/:id/comments', async (req, res, next) => {
     }
   });
   
-  router.post('/:id/comment', async (req, res, next) => { // POST /api/post/1000000/comment
+  router.post('/:id/comment', isLoggedIn, async (req, res, next) => { // POST /api/post/1000000/comment
     try {
       if(!req.user) {
           return res.status(401).send('로그인이 필요합니다.');
