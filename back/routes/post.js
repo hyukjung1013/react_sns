@@ -1,10 +1,29 @@
 const express = require('express');
 const db = require('../models');
+const path = require('path');
+const multer = require('multer');
 const { isLoggedIn } = require('./middleware');
 
 const router = express.Router();
 
-router.post('/', isLoggedIn, async (req, res, next) => {
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, file, done) {
+      done(null, 'uploads');  // uploads 폴더
+    },
+    filename(req, file, done) {
+      const external = path.extname(file.originalname);
+      const basename = path.basename(file.originalname, external); // 제로초.png, external===.png, basename===제로초
+      done(null, basename + new Date().valueOf() + external);
+    },
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 },
+});
+
+router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
+    // 폼데이터의 파일, 이미지 => req.file / req.files
+    // 폼데이터의 일반 값 => req.body
+
     try {
         const hashtags = req.body.content.match(/#[^\s]+/g);
         const newPost = await db.Post.create({
@@ -17,11 +36,26 @@ router.post('/', isLoggedIn, async (req, res, next) => {
             );
             await newPost.addHashtags(result.map( r => r[0] ));
         }
+        if (req.body.image) {
+          if (Array.isArray(req.body.image)) {  
+            // 이미지 여러개
+            const images = await Promise.all(req.body.image.map((image) => {
+              return db.Image.create({ src: image });
+            }));
+            await newPost.addImages(images);
+          } else {
+            // 이미지 1개
+            const image = await db.Image.create({ src: req.body.image });
+            await newPost.addImage(image);
+          }
+        }
         const fullPost = await db.Post.findOne({
             where: { id: newPost.id },
             include: [{
-                model: db.User,
-            }]
+              model: db.User,
+            }, {
+              model: db.Image,
+            }], 
         });
         res.json(fullPost);
     } catch (e) {
@@ -30,8 +64,14 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     }
 });
 
-router.post('/images', (req, res) => {
+router.post('/images', upload.array('image'), (req, res) => {
+  // upload.none();     이미지나 파일을 하나도 올리지않을 때
+  // upload.single();   파일 1개
+  // upload.array();    파일 여러개
+  // 파라미터는 formData에서 append()하는 이름 
 
+  console.log(req.files);   // upload.single()이면 req.file
+  res.json(req.files.map(v => v.filename));
 });
 
 router.get('/:id/comments', async (req, res, next) => {
