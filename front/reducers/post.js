@@ -213,6 +213,22 @@ export const initialState = {
           ...state,
         };
       }
+      case RETWEET_REQUEST: {
+        return {
+          ...state,
+        };
+      }
+      case RETWEET_SUCCESS: {
+        return {
+          ...state,
+          mainPosts: [action.data, ...state.mainPosts],
+        };
+      }
+      case RETWEET_FAILURE: {
+        return {
+          ...state,
+        };
+      }
       default: {
         return {
           ...state,
