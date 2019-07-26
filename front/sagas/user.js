@@ -8,7 +8,8 @@ import {
     UNFOLLOW_USER_REQUEST, UNFOLLOW_USER_SUCCESS, UNFOLLOW_USER_FAILURE,
     LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWERS_SUCCESS, LOAD_FOLLOWERS_FAILURE,
     LOAD_FOLLOWINGS_REQUEST, LOAD_FOLLOWINGS_SUCCESS, LOAD_FOLLOWINGS_FAILURE,
-    REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILURE
+    REMOVE_FOLLOWER_REQUEST, REMOVE_FOLLOWER_SUCCESS, REMOVE_FOLLOWER_FAILURE,
+    EDIT_NICKNAME_REQUEST, EDIT_NICKNAME_SUCCESS, EDIT_NICKNAME_FAILURE
 } from '../reducers/user'
 
 import axios from 'axios';
@@ -260,7 +261,36 @@ try {
 }
 
 function* watchRemoveFollower() {
-yield takeEvery(REMOVE_FOLLOWER_REQUEST, removeFollower);
+    yield takeEvery(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
+// EDIT NICKNAME
+function editNicknameAPI(nickname) {
+    // 서버에 요청을 보내는 부분
+    return axios.patch('/user/nickname', { nickname }, {
+      withCredentials: true,
+    });
+  }
+  
+function* editNickname(action) {
+try {
+    // yield call(loadFollowersAPI);
+    const result = yield call(editNicknameAPI, action.data);
+    yield put({ // put은 dispatch 동일
+    type: EDIT_NICKNAME_SUCCESS,
+    data: result.data,
+    });
+} catch (e) { // loginAPI 실패
+    console.error(e);
+    yield put({
+    type: EDIT_NICKNAME_FAILURE,
+    error: e,
+    });
+}
+}
+
+function* watchEditNickname() {
+    yield takeEvery(EDIT_NICKNAME_REQUEST, editNickname);
 }
   
 
@@ -275,5 +305,6 @@ export default function* userSaga() {
         fork(watchLoadFollowers),
         fork(watchLoadFollowings),
         fork(watchRemoveFollower),
+        fork(watchEditNickname),
     ]) 
 }

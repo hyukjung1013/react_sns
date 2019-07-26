@@ -1,10 +1,4 @@
-const dummyUser = {
-    nickname: '제로초',
-    Post: [],
-    Followings: [],
-    Followers: [],
-    id: 1,
-  };
+
   
   export const initialState = {
     isLoggedIn: false, // 로그인 여부
@@ -18,6 +12,8 @@ const dummyUser = {
     followingList: [], // 팔로잉 리스트
     followerList: [], // 팔로워 리스트
     userInfo: null, // 남의 정보
+    isEditingNickname: false, // 이름 변경 중
+    editNicknameErrorReason: '', // 이름 변경 실패 사유
   };
   
   export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
@@ -61,6 +57,10 @@ const dummyUser = {
   export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
   export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
   export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
+
+  export const EDIT_NICKNAME_REQUEST = 'EDIT_NICKNAME_REQUEST';
+  export const EDIT_NICKNAME_SUCCESS = 'EDIT_NICKNAME_SUCCESS';
+  export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
   
   export default (state = initialState, action) => {
     switch (action.type) {
@@ -246,6 +246,30 @@ const dummyUser = {
       case REMOVE_FOLLOWER_FAILURE: {
         return {
           ...state,
+        };
+      }
+      case EDIT_NICKNAME_REQUEST: {
+        return {
+          ...state,
+          isEditingNickname: true,
+          editNicknameErrorReason: '',
+        };
+      }
+      case EDIT_NICKNAME_SUCCESS: {
+        return {
+          ...state,
+          isEditingNickname: false,
+          me: {
+            ...state.me,
+            nickname: action.data,
+          },
+        };
+      }
+      case EDIT_NICKNAME_FAILURE: {
+        return {
+          ...state,
+          isEditingNickname: false,
+          editNicknameErrorReason: action.error,
         };
       }
       default: {
