@@ -8,6 +8,7 @@ import withRedux from 'next-redux-wrapper'
 import reducer from '../reducers';
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from '../sagas';
+import withReduxSaga from 'next-redux-saga'
 
 const NodeBird = ({ Component, store, pageProps }) => {
   return (
@@ -36,13 +37,11 @@ NodeBird.getInitialProps = async (context) => {
   let pageProps = {};
   if (Component.getInitialProps) {
     pageProps = await context.Component.getInitialProps(ctx);   
-    // Component는 <Component />를 의미한다.
-    // Hashtag.getInitialProps = async (ctx) => { .. } 가 호출된다.
   }
   return { pageProps };
 }
 
-export default withRedux((initialState, options) => {
+const configureStore = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware];
   const enhancer = process.env.NODE_ENV === 'production' 
@@ -52,6 +51,8 @@ export default withRedux((initialState, options) => {
     !options.isServer && typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined' ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f,
   )
   const store = createStore(reducer, initialState, enhancer);
-  sagaMiddleware.run(rootSaga);
+  store.sagaTask = sagaMiddleware.run(rootSaga);
   return store;
-})(NodeBird);
+}
+
+export default withRedux(configureStore)(withReduxSaga(NodeBird));
