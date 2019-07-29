@@ -178,7 +178,7 @@ yield takeEvery(UNFOLLOW_USER_REQUEST, unfollow);
 }
 
 // LOAD FOLLOWERS
-function loadFollowersAPI(userId) {
+function loadFollowersAPI(userId = 0) {
     // 서버에 요청을 보내는 부분
     return axios.get(`/user/${userId}/followers`, {
         withCredentials: true,
@@ -209,7 +209,7 @@ yield takeEvery(LOAD_FOLLOWERS_REQUEST, loadFollowers);
 // LOAD FOLLOWINGS
 function loadFollowingsAPI(userId) {
 // 서버에 요청을 보내는 부분
-return axios.get(`/user/${userId}/followings`, {
+return axios.get(`/user/${userId || 0}/followings`, {
     withCredentials: true,
 });
 }
