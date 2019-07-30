@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, put, delay, call } from 'redux-saga/effects';
+import { all, fork, takeLatest, put, delay, call, throttle } from 'redux-saga/effects';
 import { 
   ADD_POST_FAILURE, ADD_POST_REQUEST, ADD_POST_SUCCESS, 
   ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE,
@@ -48,13 +48,13 @@ function* watchAddPost() {
 }
 
 // LOAD POSTS
-function loadMainPostsAPI() {
-  return axios.get('/posts');
+function loadMainPostsAPI(lastId = 0, limit = 10) {
+  return axios.get(`/posts?lastId=${lastId}&limit=${limit}`);
 }
 
-function* loadMainPosts() {
+function* loadMainPosts(action) {
   try {
-    const result = yield call(loadMainPostsAPI);
+    const result = yield call(loadMainPostsAPI, action.lastId);
     yield put({
       type: LOAD_MAIN_POSTS_SUCCESS,
       data: result.data
@@ -68,7 +68,8 @@ function* loadMainPosts() {
 }
 
 function* watchLoadMainPosts() {
-  yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
+  // yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
+  yield throttle(1000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
 
 // ADD COMMENT
@@ -125,13 +126,13 @@ function* watchLoadComments() {
 }
 
 // LOAD HASHTAG POSTS
-function loadHashtagPostsAPI(tag) {
-  return axios.get(`/hashtag/${encodeURIComponent(tag)}`);
+function loadHashtagPostsAPI(tag, lastId) {
+  return axios.get(`/hashtag/${encodeURIComponent(tag)}?lastId=${lastId}&limit=10`);
 }
 
 function* loadHashtagPosts(action) {
   try {
-    const result = yield call(loadHashtagPostsAPI, action.data);
+    const result = yield call(loadHashtagPostsAPI, action.data, action.lastId);
     yield put({
       type: LOAD_HASHTAG_POSTS_SUCCESS,
       data: result.data,
