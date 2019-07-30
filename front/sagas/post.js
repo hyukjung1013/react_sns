@@ -69,7 +69,7 @@ function* loadMainPosts(action) {
 
 function* watchLoadMainPosts() {
   // yield takeLatest(LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
-  yield throttle(1000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
+  yield throttle(2000, LOAD_MAIN_POSTS_REQUEST, loadMainPosts);
 }
 
 // ADD COMMENT
