@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Link from 'next/link'
-import LoginForm from './LoginForm'
-import UserProfile from './UserProfile'
+import LoginForm from '../containers/LoginForm'
+import UserProfile from '../containers/UserProfile'
 import { useSelector } from 'react-redux' 
 import { Menu, Input, Button, Row, Col } from 'antd' 
 import Router from 'next/router';
