@@ -1,5 +1,4 @@
 import React from 'react';
-import Head from 'next/head';
 import PropTypes from 'prop-types'
 import AppLayout from '../components/AppLayout';
 import { Provider } from 'react-redux'
@@ -12,9 +11,11 @@ import withReduxSaga from 'next-redux-saga'
 import { LOAD_USER_REQUEST } from '../reducers/user';
 import axios from 'axios';
 import Helmet from 'react-helmet';
+import { Container } from 'next/app'
 
 const NodeBird = ({ Component, store, pageProps }) => {
   return (
+    <Container>
     <Provider store={store}>
       <Helmet
           title="NodeBird"
@@ -49,6 +50,7 @@ const NodeBird = ({ Component, store, pageProps }) => {
         <Component {...pageProps} />
       </AppLayout>
     </Provider>
+    </Container>
   );
 };
 
@@ -62,23 +64,21 @@ NodeBird.getInitialProps = async (context) => {
   const { ctx, Component } = context;
   let pageProps = {};
   const state = ctx.store.getState();
-
   const cookie = ctx.isServer ? ctx.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
   if (ctx.isServer && cookie) {
-    axios.defaults.headers.Cookie = cookie
+    axios.defaults.headers.Cookie = cookie;
   }
-
   if (!state.user.me) {
     ctx.store.dispatch({
       type: LOAD_USER_REQUEST,
     });
   }
-
   if (Component.getInitialProps) {
-    pageProps = await context.Component.getInitialProps(ctx);   
+    pageProps = await Component.getInitialProps(ctx) || {};
   }
   return { pageProps };
-}
+};
 
 const configureStore = (initialState, options) => {
   const sagaMiddleware = createSagaMiddleware();
