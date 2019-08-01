@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "cross-env BUNDLE_ANALYZE=both next build",
+    "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production next start"
   },
   "author": "Hyukjung Kwon",
@@ -16,6 +17,7 @@
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^5.2.0",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-favicon": "^2.0.1",
@@ -33,7 +35,7 @@
     "redux": "^4.0.4",
     "redux-saga": "^1.0.5",
     "styled-components": "^4.3.2",
-    "cross-env": "^5.2.0"
+    "moment": "^2.24.0"
   },
   "devDependencies": {
     "eslint": "^6.0.1",

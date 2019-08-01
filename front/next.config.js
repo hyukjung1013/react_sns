@@ -1,4 +1,5 @@
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
+const webpack = require('webpack')
 
 module.exports = withBundleAnalyzer( {
     distDir: '.next',
@@ -20,6 +21,10 @@ module.exports = withBundleAnalyzer( {
             ...config,
             mode: prod ? 'production' : 'development',
             devtool: prod ? 'hidden-source-map' : 'eval',
+            plugins: [
+                ...config.plugins,
+                new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
+            ]
         }
     },
 });
