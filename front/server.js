@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressSession = require('express-session');
 const dotenv = require('dotenv');
+const path = require('path');
+const favicon = require('express-favicon');
 dotenv.config();
 
 const dev = process.env.NODE_ENV !== 'development';
@@ -15,6 +17,7 @@ const requestHandler = app.getRequestHandler();
 app.prepare().then( ()=>{
     const server = express();
     server.use(morgan('dev'));
+    server.use(favicon(__dirname + '/public/favicon.ico'));
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded( { extended: true } ));
     server.use(cookieParser(process.env.COOKIE_SECRET));
