@@ -47,8 +47,8 @@ app.prepare().then( ()=>{
         return requestHandler(req, res);
     })
 
-    server.listen(3030, () => {
-        console.log('next+exress 3030 listening.');
+    server.listen(prod ? process.env.PORT : 3030, () => {
+        console.log(`next+exress ${process.env.PORT} listening.`);
     });
 });
 
